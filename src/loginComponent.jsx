@@ -6,6 +6,7 @@ import {
   useDynamicContext
 } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+import { EthersExtension } from "@dynamic-labs/ethers-v5";
 
 const LoginComponent = ({ authChoice }) => {
 
