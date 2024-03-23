@@ -10,7 +10,8 @@ import {
   DynamicUserProfile,
   useDynamicContext
 } from "@dynamic-labs/sdk-react-core";
-import { EthersExtension } from "@dynamic-labs/ethers-v5";
+import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+
 
 const LoginComponent = ({ authChoice }) => {
   const [loginMethod, setLoginMethod] = useState(null);
@@ -38,8 +39,8 @@ const LoginComponent = ({ authChoice }) => {
       {authChoice === 'dynamic' && (
         <DynamicContextProvider
           settings={{
-            environmentId: "REPLACE-WITH-YOUR-ENVIRONMENT-ID",
-            walletConnectorExtensions: [EthersExtension],
+            environmentId: "1afe0b49-05c4-4994-b888-caaa23c178fc",
+            walletConnectors: [ EthereumWalletConnectors ],
           }}
         >
           <DynamicWidget />
