@@ -1,8 +1,20 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import LoginComponent, { handleFarcasterAuth, handleDynamicAuth } from './loginComponent';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [authChoice, setAuthChoice] = useState(null);
+
+  // Function to handle Farcaster Auth
+  const handleFarcasterButtonClick = () => {
+    setAuthChoice('farcaster');
+    handleFarcasterAuth(); // Call the handleFarcasterAuth function
+  };
+
+  // Function to handle Dynamic Auth
+  const handleDynamicButtonClick = () => {
+    setAuthChoice('dynamic');
+    handleDynamicAuth(); // Call the handleDynamicAuth function
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-700 to-purple-500">
@@ -14,16 +26,25 @@ function App() {
           </p>
         </div>
         <div className="space-x-10">
+          {/* Button for Farcaster Auth */}
           <button
             className="inline-flex h-9 items-center justify-center rounded-md bg-black px-4 py-2 text-white text-sm font-medium shadow-sm shadow transition-colors hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
-            href="#"
+            onClick={handleFarcasterButtonClick} 
           >
             Connect Farcaster Auth
+          </button>
+          
+          {/* Button for Dynamic Auth */}
+          <button
+            className="inline-flex h-9 items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white text-sm font-medium shadow-sm shadow transition-colors hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+            onClick={handleDynamicButtonClick}
+          >
+            Connect Dynamic Auth
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
