@@ -23,12 +23,6 @@ function App() {
           </p>
         </div>
         <div className="space-x-10">
-          <button
-            className="inline-flex h-9 items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white text-sm font-medium shadow-sm shadow transition-colors hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
-            onClick={handleDynamicButtonClick}
-          >
-            Connect Dynamic Auth
-          </button>
 
           {authChoice && <LoginComponent authChoice={authChoice} />}
         </div>
