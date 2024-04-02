@@ -1,5 +1,5 @@
 {
-  "name": "vcaster",
+  "name": "scaling-ethereum-gnosis",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,11 +13,8 @@
     "@dynamic-labs/ethereum": "^1.4.1",
     "@dynamic-labs/ethers-v5": "^1.4.1",
     "@dynamic-labs/sdk-react-core": "^1.4.1",
-    "@dynamic-labs/solana": "^1.4.1",
-    "@farcaster/auth-kit": "^0.2.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "viem": "^1.21.4"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -8,11 +8,10 @@ import {
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import { EthersExtension } from "@dynamic-labs/ethers-v5";
 
-const LoginComponent = ({ authChoice }) => {
+const LoginComponent = () => {
   console.log("rendering LoginComponent");
   return (
     <div>
-      {authChoice === "dynamic" && (
         <DynamicContextProvider
           settings={{
             environmentId: "1afe0b49-05c4-4994-b888-caaa23c178fc",
@@ -23,14 +22,10 @@ const LoginComponent = ({ authChoice }) => {
           <DynamicUserProfile />
           <ProfileDynamic />
         </DynamicContextProvider>
-      )}
     </div>
   );
 };
 
-export const handleDynamicAuth = () => {
-  console.log("Dynamic Auth chosen");
-};
 
 function ProfileDynamic() {
   const { showDynamicUserProfile } = useDynamicContext();
