@@ -8,8 +8,12 @@ import {
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import { EthersExtension } from "@dynamic-labs/ethers-v5";
 
+
+
+
 const LoginComponent = () => {
-  console.log("rendering LoginComponent");
+
+
   return (
     <div>
         <DynamicContextProvider
@@ -22,6 +26,7 @@ const LoginComponent = () => {
           <DynamicUserProfile />
           <ProfileDynamic />
         </DynamicContextProvider>
+        
     </div>
   );
 };
@@ -29,11 +34,18 @@ const LoginComponent = () => {
 
 function ProfileDynamic() {
   const { showDynamicUserProfile } = useDynamicContext();
+  const { primaryWallet } = useDynamicContext();
+  const address = primaryWallet?.address;
+
+  // return (
+  //   <div>
+  //     <p>Address: {address}</p>
+  //   </div>
+  // );
+
 
   // Logic for handling profile details when Dynamic Auth is chosen
   // You can use showDynamicUserProfile to trigger actions when the widget opens or closes
-
-  return null; // or render your profile details component here
 }
 
 export default LoginComponent;
