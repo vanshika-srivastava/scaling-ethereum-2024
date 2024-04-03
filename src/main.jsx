@@ -12,7 +12,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           settings={{
             environmentId: "1afe0b49-05c4-4994-b888-caaa23c178fc",
             walletConnectors: [EthereumWalletConnectors],
-            initialAuthenticationMode: 'connect-and-sign',
+            walletConnectorExtensions: [EthersExtension],
+            // initialAuthenticationMode: 'connect-and-sign',
           }}
         >
     <App />
