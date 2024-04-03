@@ -1,47 +1,45 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { address } from "./loginComponent"; // Importing ProfileDynamic component
 import { ethers } from "ethers";
 
 function Mint() {
-    const { rpcProviders } = useDynamicContext();
-    const rpcProvider = rpcProviders.evmProviders[1];
-    // console.log(rpcProvider);
+  const { primaryWallet } = useDynamicContext();
+  const [network, setNetwork] = useState(null);
+  const [balance, setBalance] = useState(null);
 
-    useEffect(() => {
-        if (!rpcProvider) {
-            console.log("No EVM Providers configured.");
-            return;
-        }
+  useEffect(() => {
+    const getNetworkAndBalance = async () => {
+      const provider = await primaryWallet.connector.ethers?.getWeb3Provider();
+      const signer = await primaryWallet.connector.ethers?.getSigner();
 
-        const web3Provider = rpcProvider.provider;
-        const provider = new ethers.providers.JsonRpcProvider(web3Provider);
+      if (!provider || !signer) {
+        console.log("No provider or signer configured.");
+        return;
+      }
 
-        // Now you can interact with Ethereum using 'provider'
+      const newNetwork = await provider.getNetwork();
+      setNetwork(newNetwork);
 
-        // Example: Get the current network
-        provider.getNetwork().then(network => {
-            console.log("Connected to network:", network);
-        }).catch(error => {
-            console.error("Error getting network:", error);
-        });
+      const newBalance = await signer.getBalance();
+      setBalance(newBalance);
+    };
 
-        const signer = provider.getSigner(); // Get a signer from the provider
-        signer.getAddress().then(address => {
-            provider.getBalance(address).then(balance => {
-                console.log("Balance of address", address, ":", ethers.utils.formatEther(balance));
-            }).catch(error => {
-                console.error("Error getting balance:", error);
-            });
-        }).catch(error => {
-            console.error("Error getting address:", error);
-        });
+    if (!primaryWallet) {
+      console.log("No wallet configured.");
+      return;
+    }
 
-        // You can perform other interactions with Ethereum here
+    if (!network || !balance) {
+      getNetworkAndBalance();
+    }
+  }, [primaryWallet, network, balance]);
 
-    }, [rpcProvider]); // Ensure this effect runs when 'rpcProvider' changes
-
-    return null; // You may return JSX if needed
+  return (
+    <>
+      {network && <p>Network: {network}</p>}
+      {balance && <p>Balance: {ethers.utils.formatEther(balance)}</p>}
+    </>
+  );
 }
 
 export default Mint;
