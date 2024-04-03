@@ -1,47 +1,78 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { address } from "./loginComponent"; // Importing ProfileDynamic component
 import { ethers } from "ethers";
 
 function Mint() {
-    const { rpcProviders } = useDynamicContext();
-    const rpcProvider = rpcProviders.evmProviders[1];
-    // console.log(rpcProvider);
+  const { primaryWallet } = useDynamicContext();
+  const [network, setNetwork] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const [txHash, setTxHash] = useState(false);
 
-    useEffect(() => {
-        if (!rpcProvider) {
-            console.log("No EVM Providers configured.");
-            return;
-        }
+  const handleSendTransaction = async () => {
+    const address = document.getElementById("address").value;
+    const amount = document.getElementById("amount").value;
 
-        const web3Provider = rpcProvider.provider;
-        const provider = new ethers.providers.JsonRpcProvider(web3Provider);
+    const signer = await primaryWallet.connector.ethers?.getSigner();
 
-        // Now you can interact with Ethereum using 'provider'
+    const txRequest = {
+      to: address,
+      value: ethers.utils.parseEther(amount),
+    };
 
-        // Example: Get the current network
-        provider.getNetwork().then(network => {
-            console.log("Connected to network:", network);
-        }).catch(error => {
-            console.error("Error getting network:", error);
-        });
+    try {
+      const txHash = await signer.sendTransaction(txRequest);
+      setTxHash(txHash);
+      console.log(`Transaction sent: ${txHash}`);
+    } catch (error) {
+      console.error(`Error sending transaction: ${error}`);
+    }
+  };
 
-        const signer = provider.getSigner(); // Get a signer from the provider
-        signer.getAddress().then(address => {
-            provider.getBalance(address).then(balance => {
-                console.log("Balance of address", address, ":", ethers.utils.formatEther(balance));
-            }).catch(error => {
-                console.error("Error getting balance:", error);
-            });
-        }).catch(error => {
-            console.error("Error getting address:", error);
-        });
+  useEffect(() => {
+    const getNetworkAndBalance = async () => {
+      const provider = await primaryWallet.connector.ethers?.getWeb3Provider();
+      const signer = await primaryWallet.connector.ethers?.getSigner();
 
-        // You can perform other interactions with Ethereum here
+      if (!provider || !signer) {
+        console.log("No provider or signer configured.");
+        return;
+      }
 
-    }, [rpcProvider]); // Ensure this effect runs when 'rpcProvider' changes
+      const newNetwork = await provider.getNetwork();
+      setNetwork(newNetwork);
 
-    return null; // You may return JSX if needed
+      const newBalance = await signer.getBalance();
+      setBalance(newBalance);
+    };
+
+    if (!primaryWallet) {
+      console.log("No wallet configured.");
+      return;
+    }
+
+    if (!network || !balance) {
+      getNetworkAndBalance();
+    }
+  }, [primaryWallet, network, balance]);
+
+  return (
+    <>
+      {network && <p>Network: {network?.name}</p>}
+      {balance && <p>Balance: {ethers.utils.formatEther(balance)}</p>}
+      <div>
+        <label htmlFor="address">Address:</label>
+        <input id="address" type="text" />
+
+        <label htmlFor="amount">Amount:</label>
+        <input id="amount" type="text" />
+
+        <button onClick={() => handleSendTransaction()}>
+          Send Transaction
+        </button>
+      </div>
+      {txHash && <p>Latest Transaction Hash: {txHash}</p>}
+    </>
+  );
 }
 
 export default Mint;

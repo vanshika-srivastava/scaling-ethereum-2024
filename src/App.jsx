@@ -1,7 +1,10 @@
-import React, { useState } from "react";
 import LoginComponent from "./loginComponent";
+import Mint from "./mintComponent";
+import { useIsLoggedIn, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 
 function App() {
+  const isLoggedIn = useIsLoggedIn();
+  const { primaryWallet } = useDynamicContext();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-300 to-blue-500">
@@ -10,17 +13,21 @@ function App() {
           <h1 className="text-4xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             Scaling Ethereum Workshop 2024
           </h1>
-          </div>
-          <div className="text-center space-y-10">
+        </div>
+        <div className="text-center space-y-10">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             Build UX simplified dApps on Gnosis Chain
           </h1>
         </div>
-        <LoginComponent/>
-
-        </div>
+        {!isLoggedIn && <LoginComponent />}
+        {isLoggedIn && (
+          <div>
+            <p>{primaryWallet?.address}</p>
+            <Mint />
+          </div>
+        )}
       </div>
-
+    </div>
   );
 }
 
