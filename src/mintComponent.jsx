@@ -6,6 +6,27 @@ function Mint() {
   const { primaryWallet } = useDynamicContext();
   const [network, setNetwork] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [txHash, setTxHash] = useState(false);
+
+  const handleSendTransaction = async () => {
+    const address = document.getElementById("address").value;
+    const amount = document.getElementById("amount").value;
+
+    const signer = await primaryWallet.connector.ethers?.getSigner();
+
+    const txRequest = {
+      to: address,
+      value: ethers.utils.parseEther(amount),
+    };
+
+    try {
+      const txHash = await signer.sendTransaction(txRequest);
+      setTxHash(txHash);
+      console.log(`Transaction sent: ${txHash}`);
+    } catch (error) {
+      console.error(`Error sending transaction: ${error}`);
+    }
+  };
 
   useEffect(() => {
     const getNetworkAndBalance = async () => {
@@ -38,6 +59,18 @@ function Mint() {
     <>
       {network && <p>Network: {network?.name}</p>}
       {balance && <p>Balance: {ethers.utils.formatEther(balance)}</p>}
+      <div>
+        <label htmlFor="address">Address:</label>
+        <input id="address" type="text" />
+
+        <label htmlFor="amount">Amount:</label>
+        <input id="amount" type="text" />
+
+        <button onClick={() => handleSendTransaction()}>
+          Send Transaction
+        </button>
+      </div>
+      {txHash && <p>Latest Transaction Hash: {txHash}</p>}
     </>
   );
 }
