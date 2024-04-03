@@ -5,26 +5,18 @@ import {
   DynamicUserProfile,
   useDynamicContext,
 } from "@dynamic-labs/sdk-react-core";
-import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
-import { EthersExtension } from "@dynamic-labs/ethers-v5";
 
-let address = "";
+
 
 const LoginComponent = () => {
+  const { primaryWallet } = useDynamicContext();
 
 
   return (
     <div>
-        <DynamicContextProvider
-          settings={{
-            environmentId: "1afe0b49-05c4-4994-b888-caaa23c178fc",
-            walletConnectors: [EthereumWalletConnectors],
-          }}
-        >
           <DynamicWidget />
           <DynamicUserProfile />
           <ProfileDynamic />
-        </DynamicContextProvider>
         
     </div>
   );
@@ -45,6 +37,5 @@ function ProfileDynamic() {
   return null; // Since there's no JSX to return in this example
 }
 
-export { address }; 
 
 export default LoginComponent;

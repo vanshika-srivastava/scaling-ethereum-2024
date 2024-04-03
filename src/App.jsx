@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import LoginComponent from "./loginComponent";
+import { useIsLoggedIn, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 
 function App() {
+  const isLoggedIn = useIsLoggedIn();
+  const { primaryWallet } = useDynamicContext();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-300 to-blue-500">
@@ -16,6 +19,7 @@ function App() {
             Build UX simplified dApps on Gnosis Chain
           </h1>
         </div>
+        
         <LoginComponent/>
 
         </div>
