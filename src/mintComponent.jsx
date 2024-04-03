@@ -1,47 +1,70 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { address } from "./loginComponent"; // Importing ProfileDynamic component
 import { ethers } from "ethers";
+import abi from './smartcontract/utils/abi.json'
 
 function Mint() {
-    const { rpcProviders } = useDynamicContext();
-    const rpcProvider = rpcProviders.evmProviders[1];
-    // console.log(rpcProvider);
+  const { primaryWallet } = useDynamicContext();
+  const [txHash, setTxHash] = useState(null);
+  const [contract, setContract] = useState(null);
 
-    useEffect(() => {
-        if (!rpcProvider) {
-            console.log("No EVM Providers configured.");
-            return;
-        }
+  useEffect(() => {
+    const initializeContract = async () => {
+      // Initialize your NFT contract here
+    //   const nftAddress = import.meta.env.VITE_NFT_CONTRACT_ADDRESS;
+      const nftAddress = "0x34348d42902a668C72372a91773E4133f7191f98" ;
+      const signer = await primaryWallet.connector.ethers?.getSigner();
+      const provider = await primaryWallet.connector.ethers?.getWeb3Provider();
+      const contract = new ethers.Contract(nftAddress, abi, signer);
+      setContract(contract);
+    };
 
-        const web3Provider = rpcProvider.provider;
-        const provider = new ethers.providers.JsonRpcProvider(web3Provider);
+    initializeContract();
+  }, [primaryWallet]);
 
-        // Now you can interact with Ethereum using 'provider'
+  const handleMint = async () => {
+    if (!contract) {
+      console.error("NFT contract is not initialized");
+      return;
+    }
+  
+    console.log("Contract is initialized:", contract);
+  
+    try {
+      const txRequest = await contract.mint();
+      const signer = await primaryWallet.connector.ethers?.getSigner();
+      const tx = await signer.sendTransaction(txRequest);
+      setTxHash(tx.hash);
+      console.log(`Transaction sent: ${tx.hash}`);
+    } catch (error) {
+      console.error(`Error sending transaction: ${error}`);
+    }
+  };
+  
 
-        // Example: Get the current network
-        provider.getNetwork().then(network => {
-            console.log("Connected to network:", network);
-        }).catch(error => {
-            console.error("Error getting network:", error);
-        });
-
-        const signer = provider.getSigner(); // Get a signer from the provider
-        signer.getAddress().then(address => {
-            provider.getBalance(address).then(balance => {
-                console.log("Balance of address", address, ":", ethers.utils.formatEther(balance));
-            }).catch(error => {
-                console.error("Error getting balance:", error);
-            });
-        }).catch(error => {
-            console.error("Error getting address:", error);
-        });
-
-        // You can perform other interactions with Ethereum here
-
-    }, [rpcProvider]); // Ensure this effect runs when 'rpcProvider' changes
-
-    return null; // You may return JSX if needed
+  return (
+    <div className="flex justify-center items-center ">
+      <button
+        onClick={handleMint}
+        className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded"
+      >
+        Mint NFT
+      </button>
+      {txHash && (
+        <div className="mt-4">
+          Transaction Hash:{" "}
+          <a
+            href={`https://etherscan.io/tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500"
+          >
+            {txHash}
+          </a>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Mint;
