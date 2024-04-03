@@ -36,7 +36,7 @@ function Mint() {
 
   return (
     <>
-      {network && <p>Network: {network}</p>}
+      {network && <p>Network: {network?.name}</p>}
       {balance && <p>Balance: {ethers.utils.formatEther(balance)}</p>}
     </>
   );
