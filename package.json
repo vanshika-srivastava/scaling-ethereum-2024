@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dynamic-labs/ethereum": "^1.4.1",
+    "@dynamic-labs/ethereum-aa": "^1.4.4",
     "@dynamic-labs/ethers-v5": "^1.4.1",
     "@dynamic-labs/sdk-react-core": "^1.4.1",
     "dotenv": "^16.4.5",
